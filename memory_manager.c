@@ -25,7 +25,6 @@ void mem_init(size_t size) {
     printf("Memory pool initialized with size: %zu bytes\n", size);
 }
 
-// Allocate a block of memory
 void* mem_alloc(size_t size) {
     if (size <= 0) return NULL;
 
@@ -40,7 +39,7 @@ void* mem_alloc(size_t size) {
             // Split the block if it's larger than the requested size + metadata
             size_t remainingSize = current->size - size - sizeof(BlockMeta);
 
-            if (remainingSize >= MIN_SIZE) {
+            if (remainingSize >= MIN_SIZE + sizeof(BlockMeta)) {
                 // Create a new block for the remaining free memory
                 BlockMeta* newBlock = (BlockMeta*)((char*)current + sizeof(BlockMeta) + size);
                 newBlock->size = remainingSize;
@@ -67,7 +66,7 @@ void* mem_alloc(size_t size) {
     return NULL;  // Return NULL if no suitable block was found
 }
 
-// Free a block of memory
+
 void mem_free(void* ptr) {
     if (ptr == NULL) return;
 
@@ -93,6 +92,7 @@ void mem_free(void* ptr) {
 
     printf("Memory block freed.\n");
 }
+
 
 // Resize an allocated block
 void* mem_resize(void* ptr, size_t newSize) {

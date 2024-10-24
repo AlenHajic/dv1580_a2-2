@@ -47,4 +47,4 @@ run_test_list:
 
 # Clean target to clean up build files
 clean:
-	rm -f $(OBJ) $(LIB_NAME) test_memory_manager test_linked_list linked_list.o
+	rm -f $(OBJ) $(LIB_NAME) test_memory_manager test_memory_manager.c test_linked_list linked_list.o
