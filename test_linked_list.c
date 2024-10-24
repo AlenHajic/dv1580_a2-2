@@ -7,6 +7,7 @@
 #include <math.h>
 #include "common_defs.h"
 #include "gitdata.h"
+#include <pthread.h>
 
 typedef struct
 {
