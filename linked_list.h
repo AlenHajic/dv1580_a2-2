@@ -1,5 +1,6 @@
 #include <stdint.h>  // For uint16_t
 #include <stddef.h>  // For size_t
+#include <pthread.h>
 
 // Ensure compatibility with C++ compilers
 #ifdef __cplusplus
