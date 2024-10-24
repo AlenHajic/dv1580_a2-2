@@ -1,8 +1,8 @@
 # Compiler and Linking Variables
 CC = gcc
 CFLAGS = -Wall -fPIC
-LDFLAGS = -L. -lmemory_manager -pthread
 LIB_NAME = libmemory_manager.so
+LDFLAGS = -L. -lmemory_manager -pthread -lm  # Add -lm for the math library
 
 # Source and Object Files
 SRC = memory_manager.c
@@ -27,11 +27,11 @@ list: linked_list.o
 
 # Test target to run the memory manager test program
 test_mmanager: $(LIB_NAME)
-	$(CC) -o test_memory_manager test_memory_manager.c -L. -lmemory_manager $(LDFLAGS)
+	$(CC) -o test_memory_manager test_memory_manager.c -L. -lmemory_manager -pthread -lm
 
 # Test target to run the linked list test program
 test_list: $(LIB_NAME) linked_list.o
-	$(CC) $(CFLAGS) -o test_linked_list linked_list.c test_linked_list.c -L. -lmemory_manager $(LDFLAGS)
+	$(CC) $(CFLAGS) -o test_linked_list linked_list.c test_linked_list.c -L. -lmemory_manager -pthread
 	cp test_linked_list test_linked_listCG
 
 # Run tests
