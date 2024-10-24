@@ -1,15 +1,9 @@
+#include "memory_manager.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "memory_manager.h"
 
 #define MIN_SIZE 16  // Minimum size for a memory block to avoid fragmentation
-
-typedef struct BlockMeta {
-    size_t size;           // Size of the block
-    int isFree;            // Whether the block is free (1) or allocated (0)
-    struct BlockMeta* next;  // Pointer to the next block in the linked list
-} BlockMeta;
 
 void* memoryPool = NULL;  // Pointer to the start of the memory pool
 BlockMeta* freeList = NULL;  // Pointer to the head of the free block list
