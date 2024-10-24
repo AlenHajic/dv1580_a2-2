@@ -6,8 +6,6 @@ LIB_NAME = libmemory_manager.so
 # Source and Object Files
 SRC = memory_manager.c
 OBJ = $(SRC:.c=.o)
-# LIST_SRC = linked_list.c
-# LIST_OBJ = $(LIST_SRC:.c=.o)
 
 # Default target
 all: mmanager list test_mmanager test_list
@@ -30,9 +28,10 @@ list: linked_list.o
 test_mmanager: $(LIB_NAME)
 	$(CC) -o test_memory_manager test_memory_manager.c -L. -lmemory_manager $(LDFLAGS)
 
+# Test target to run the linked list test program
 test_list: $(LIB_NAME) linked_list.o
-    $(CC) $(CFLAGS) -o test_linked_list linked_list.c test_linked_list.c -L. -lmemory_manager $(LDFLAGS)
-    cp test_linked_list test_linked_listCG
+	$(CC) $(CFLAGS) -o test_linked_list linked_list.c test_linked_list.c -L. -lmemory_manager $(LDFLAGS)
+	cp test_linked_list test_linked_listCG
 
 # Run tests
 run_tests: run_test_mmanager run_test_list
