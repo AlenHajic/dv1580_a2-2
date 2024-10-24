@@ -32,7 +32,6 @@ void* mem_alloc(size_t size) {
     size = (size + (MIN_SIZE - 1)) & ~(MIN_SIZE - 1);
 
     BlockMeta* current = freeList;
-    BlockMeta* previous = NULL;
 
     while (current != NULL) {
         if (current->isFree && current->size >= size) {
@@ -50,7 +49,7 @@ void* mem_alloc(size_t size) {
                 current->isFree = 0;
                 current->next = newBlock;
             } else {
-                // If the remaining size is too small to be a new block, just allocate the entire block
+                // If the remaining size is too small to be a new block, allocate the entire block
                 current->isFree = 0;
             }
 
@@ -58,13 +57,13 @@ void* mem_alloc(size_t size) {
             return (char*)current + sizeof(BlockMeta);  // Return a pointer to the memory after the metadata
         }
 
-        previous = current;
         current = current->next;
     }
 
     printf("Error: No suitable block found for size %zu\n", size);
     return NULL;  // Return NULL if no suitable block was found
 }
+
 
 
 void mem_free(void* ptr) {
