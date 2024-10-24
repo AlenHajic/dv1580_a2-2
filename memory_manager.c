@@ -18,7 +18,7 @@ void mem_init(size_t size) {
 
     // Initialize the first block in the free list
     freeList = (BlockMeta*)memoryPool;
-    freeList->size = size - sizeof(BlockMeta);  // The block size is the total size minus metadata
+    freeList->size = size;  // The block size is the total size minus metadata
     freeList->isFree = 1;
     freeList->next = NULL;
 
@@ -36,11 +36,11 @@ void* mem_alloc(size_t size) {
     while (current != NULL) {
         if (current->isFree && current->size >= size) {
             // Split the block if it's larger than the requested size + metadata
-            size_t remainingSize = current->size - size - sizeof(BlockMeta);
+            size_t remainingSize = current->size - size;
 
-            if (remainingSize >= MIN_SIZE + sizeof(BlockMeta)) {
+            if (remainingSize >= MIN_SIZE) {
                 // Create a new block for the remaining free memory
-                BlockMeta* newBlock = (BlockMeta*)((char*)current + sizeof(BlockMeta) + size);
+                BlockMeta* newBlock = (BlockMeta*)((char*)current + size);
                 newBlock->size = remainingSize;
                 newBlock->isFree = 1;
                 newBlock->next = current->next;
@@ -54,7 +54,7 @@ void* mem_alloc(size_t size) {
             }
 
             printf("Allocating memory block of size: %zu\n", size);
-            return (char*)current + sizeof(BlockMeta);  // Return a pointer to the memory after the metadata
+            return (char*)current;  // Return a pointer to the memory after the metadata
         }
 
         current = current->next;
@@ -69,12 +69,12 @@ void* mem_alloc(size_t size) {
 void mem_free(void* ptr) {
     if (ptr == NULL) return;
 
-    BlockMeta* block = (BlockMeta*)((char*)ptr - sizeof(BlockMeta));
+    BlockMeta* block = (BlockMeta*)((char*)ptr);
     block->isFree = 1;
 
     // Merge with the next block if it's free
     if (block->next != NULL && block->next->isFree) {
-        block->size += block->next->size + sizeof(BlockMeta);
+        block->size += block->next->size;
         block->next = block->next->next;
     }
 
@@ -82,7 +82,7 @@ void mem_free(void* ptr) {
     BlockMeta* current = freeList;
     while (current != NULL) {
         if (current->next == block && current->isFree) {
-            current->size += block->size + sizeof(BlockMeta);
+            current->size += block->size;
             current->next = block->next;
             break;
         }
@@ -100,7 +100,7 @@ void* mem_resize(void* ptr, size_t newSize) {
         return mem_alloc(newSize);  // If the pointer is NULL, behave like mem_alloc
     }
 
-    BlockMeta* block = (BlockMeta*)((char*)ptr - sizeof(BlockMeta));
+    BlockMeta* block = (BlockMeta*)((char*)ptr);
 
     // If the current block is already big enough, return the same pointer
     if (block->size >= newSize) {
@@ -109,7 +109,7 @@ void* mem_resize(void* ptr, size_t newSize) {
 
     // If the next block is free and large enough, merge it
     if (block->next != NULL && block->next->isFree && block->size + block->next->size >= newSize) {
-        block->size += block->next->size + sizeof(BlockMeta);
+        block->size += block->next->size;
         block->next = block->next->next;
         return ptr;
     }
