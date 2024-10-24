@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stddef.h> // For size_t
 #include <pthread.h>
+#include <stdlib.h>
 
 // Helps C++ compilers to handle C header files
 #ifdef __cplusplus
